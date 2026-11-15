@@ -1,22 +1,17 @@
 import os
-from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
 from tavily import TavilyClient
 
-load_dotenv()
-
-# Setup LLM (Reads from .env file)
+# Setup LLM (Keys are hardcoded here for local testing)
 llm = ChatGroq(
     model="openai/gpt-oss-20b", 
     temperature=0.1,
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key="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"  
 )
 
-# Setup Tavily (Reads from .env file)
-tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
-
-def search_web(query: str) -> str:
+# Setup Tavily (Keys are hardcoded here for local testing)
+tavily = TavilyClient("tvly-30mVFt-hveqtztjEu5RsqqOOIHzBeqYQsMcfQ9Po2lO1JGF3z")  #def search_web(query: str) -> str:
     """Search the web using Tavily."""
     try:
         response = tavily.search(query=query, search_depth="advanced", max_results=5)
@@ -34,9 +29,11 @@ def search_web(query: str) -> str:
 async def run_procurement(query: str):
     print(f"🔍 Starting research for: {query}")
     
+    # 1. Researcher Agent: Search the web
     search_results = search_web(f"best {query} buy online price specifications 2024")
     print("✅ Search completed.")
     
+    # 2. Analyst Agent: Analyze and Compare
     print("🧠 Analyzing results...")
     analyst_prompt = f"""
     You are a Senior Procurement Analyst.
@@ -57,6 +54,7 @@ async def run_procurement(query: str):
     ])
     print("✅ Analysis completed.")
     
+    # 3. Reporter Agent: Generate HTML Report
     print("📝 Generating HTML Report...")
     reporter_prompt = f"""
     You are an expert technical writer.
@@ -82,6 +80,7 @@ async def run_procurement(query: str):
         HumanMessage(content=reporter_prompt)
     ])
     
+    # Clean the output in case the LLM adds markdown blocks
     html_result = report.content.replace("```html", "").replace("```", "").strip()
     
     print("✅ Report generated successfully!")
