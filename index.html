@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Procurement Assistant</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input[type="text"] { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+        button { padding: 12px 24px; background-color: #3498db; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #2980b9; }
+        .result-box { margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; overflow-x: auto; }
+        .loading { text-align: center; color: #3498db; font-weight: bold; display: none; margin-top: 10px;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🤖 Multi-Agent Procurement Assistant</h1>
+    <p style="text-align: center; color: #666;">Enter your procurement request below (e.g., "Find 3 laptops under $1000").</p>
+    
+    <form action="/procure" method="post" onsubmit="document.getElementById('loading').style.display='block';">
+        <div class="input-group">
+            <input type="text" name="query" placeholder="e.g., Find 3 laptops under $1000..." required>
+            <button type="submit">Start Research</button>
+        </div>
+        <div id="loading" class="loading">🚀 Agents are working... This might take 1-2 minutes.</div>
+    </form>
+
+    {% if result %}
+    <div class="result-box">
+        <h2>✅ Final Report:</h2>
+        <div>
+            {{ result | safe }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
